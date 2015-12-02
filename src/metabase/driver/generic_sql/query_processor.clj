@@ -11,7 +11,6 @@
             [metabase.config :as config]
             [metabase.driver :as driver]
             [metabase.driver.generic-sql :as sql]
-            [metabase.driver.generic-sql.util :refer :all]
             [metabase.driver.query-processor :as qp]
             [metabase.util :as u])
   (:import java.sql.Timestamp
@@ -257,7 +256,7 @@
   [driver {{:keys [source-table] :as query} :query, database :database, :as outer-query}]
   (let [set-timezone? (and (seq (driver/report-timezone))
                            (contains? (driver/features driver) :set-timezone))
-        entity        (korma-entity database source-table)
+        entity        ((resolve 'metabase.driver.generic-sql/korma-entity) database source-table)
         korma-query   (binding [*query* outer-query]
                         (apply-clauses driver (k/select* entity) query))
         f             (fn []
