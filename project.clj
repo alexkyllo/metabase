@@ -67,23 +67,24 @@
              :exclude-linters [:constant-test                         ; korma macros generate some forms with if statements that are always logically true or false
                                :suspicious-expression                 ; core.match macros generate some forms like (and expr) which is "suspicious"
                                :unused-ret-vals]}                     ; gives too many false positives for functions with side-effects like conj!
-  :profiles {:dev {:dependencies [[org.clojure/tools.nrepl "0.2.12"]  ; REPL <3
+  :resource-paths ["resources" "resources/db2jcc.jar" "resources/db2jcc_license_cu.jar"]
+  :profiles {:dev {:dependencies [[org.clojure/tools.nrepl "0.2.12"] ; REPL <3
                                   [org.clojure/tools.reader "0.10.0"] ; Need to explictly specify this dep otherwise expectations doesn't seem to work right :'(
-                                  [expectations "2.1.3"]              ; unit tests
+                                  [expectations "2.1.3"]  ; unit tests
                                   [ring/ring-mock "0.3.0"]]
-                   :plugins [[jonase/eastwood "0.2.2"]                ; Linting
-                             [lein-ancient "0.6.8"]                   ; Check project for outdated dependencies + plugins w/ 'lein ancient'
-                             [lein-bikeshed "0.2.0"]                  ; Linting
-                             [lein-expectations "0.0.8"]              ; run unit tests with 'lein expectations'
-                             [lein-instant-cheatsheet "2.1.4"]        ; use awesome instant cheatsheet created by yours truly w/ 'lein instant-cheatsheet'
-                             [michaelblume/lein-marginalia "0.9.0"]]  ; generate documentation with 'lein marg'
-                   :global-vars {*warn-on-reflection* true}           ; Emit warnings on all reflection calls
+                   :plugins [[jonase/eastwood "0.2.2"]       ; Linting
+                             [lein-ancient "0.6.8"] ; Check project for outdated dependencies + plugins w/ 'lein ancient'
+                             [lein-bikeshed "0.2.0"]         ; Linting
+                             [lein-expectations "0.0.8"] ; run unit tests with 'lein expectations'
+                             [lein-instant-cheatsheet "2.1.4"] ; use awesome instant cheatsheet created by yours truly w/ 'lein instant-cheatsheet'
+                             [michaelblume/lein-marginalia "0.9.0"]] ; generate documentation with 'lein marg'
+                   :global-vars {*warn-on-reflection* true} ; Emit warnings on all reflection calls
                    :env {:mb-run-mode "dev"}
                    :jvm-opts ["-Dlogfile.path=target/log"
-                              "-Xms1024m"                             ; give JVM a decent heap size to start with
-                              "-Xmx2048m"                             ; hard limit of 2GB so we stop hitting the 4GB container limit on CircleCI
-                              "-XX:+CMSClassUnloadingEnabled"         ; let Clojure's dynamically generated temporary classes be GC'ed from PermGen
-                              "-XX:+UseConcMarkSweepGC"]}             ; Concurrent Mark Sweep GC needs to be used for Class Unloading (above)
+                              "-Xms1024m" ; give JVM a decent heap size to start with
+                              "-Xmx2048m" ; hard limit of 2GB so we stop hitting the 4GB container limit on CircleCI
+                              "-XX:+CMSClassUnloadingEnabled" ; let Clojure's dynamically generated temporary classes be GC'ed from PermGen
+                              "-XX:+UseConcMarkSweepGC"]} ; Concurrent Mark Sweep GC needs to be used for Class Unloading (above)
              :expectations {:global-vars {*warn-on-reflection* false}
                             :injections [(require 'metabase.test-setup)]
                             :resource-paths ["test_resources"]
@@ -93,9 +94,9 @@
                                        "-Dmb.jetty.join=false"
                                        "-Dmb.jetty.port=3010"
                                        "-Dmb.api.key=test-api-key"
-                                       "-Xverify:none"]}              ; disable bytecode verification when running tests so they start slightly faster
+                                       "-Xverify:none"]} ; disable bytecode verification when running tests so they start slightly faster
              :uberjar {:aot :all}
-             :generate-sample-dataset {:dependencies [[faker "0.2.2"]                   ; Fake data generator -- port of Perl/Ruby
+             :generate-sample-dataset {:dependencies [[faker "0.2.2"] ; Fake data generator -- port of Perl/Ruby
                                                       [incanter/incanter-core "1.9.0"]] ; Satistical functions like normal distibutions}})
                                        :source-paths ["sample_dataset"]
                                        :global-vars {*warn-on-reflection* false}
